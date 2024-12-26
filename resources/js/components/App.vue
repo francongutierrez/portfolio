@@ -1,13 +1,20 @@
 <template>
     <div>
-      <h1>¡Hola desde Vue!</h1>
-      <p>Este es un componente de Vue.js integrado con Laravel.</p>
+      <Welcome />
     </div>
   </template>
   
   <script>
+  import Welcome from './Welcome.vue';
+  
   export default {
-    name: "App",
+    name: 'App',
+    components: {
+      Welcome,
+    },
   };
   </script>
+  
+  <style scoped>
+  </style>
   
