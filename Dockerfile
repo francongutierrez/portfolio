@@ -1,27 +1,38 @@
-# Usa una imagen base con PHP y Composer
 FROM php:8.2-fpm
 
-# Instala extensiones necesarias
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
     unzip \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git
 
-# Instala Composer
-COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
+# Instalar Composer y actualizarlo a la versión más reciente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN composer self-update --2  # Asegúrate de que Composer esté en la versión 2.x
 
-# Configura el directorio de trabajo
-WORKDIR /var/www
+# Instalar extensiones de PHP necesarias
+RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 
-# Copia los archivos del proyecto
+# Configuración de trabajo
+WORKDIR /var/www/html
+
+# Copiar los archivos del proyecto
 COPY . .
 
-# Instala dependencias de Composer
-RUN composer install --no-dev --optimize-autoloader
+# Configurar permisos
+RUN chown -R www-data:www-data /var/www/html
 
-# Da permisos al almacenamiento
-RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+# Limpiar caché de Composer
+RUN composer clear-cache
 
-# Define el comando de inicio
-CMD php artisan serve --host=0.0.0.0 --port=80
+# Instalar dependencias con Composer
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader
+
+# Exponer el puerto 9000 y arrancar el servicio
+EXPOSE 9000
+CMD ["php-fpm"]
