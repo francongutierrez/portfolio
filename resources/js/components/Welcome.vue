@@ -2,7 +2,7 @@
     <div class="bg-black flex items-center justify-center h-screen">
       <div class="text-center">
         <h1 class="typed-text text-4xl font-bold text-green-600"></h1>
-        <p class="text-lg mt-4 text-white">Todo está configurado correctamente.</p>
+        <p class="text-lg mt-4 text-green-600">Todo está configurado correctamente.</p>
       </div>
     </div>
   </template>
@@ -23,7 +23,7 @@
   
         if (element) {
           const typewriter = new Typewriter(element, {
-            loop: false,
+            loop: true,
             delay: 75,
           });
   
@@ -32,6 +32,7 @@
             .pauseFor(2000)
             .deleteAll()
             .typeString("Bienvenido a mi portfolio")
+            .pauseFor(2000)
             .start();
         }
       },
