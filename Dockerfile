@@ -1,5 +1,5 @@
 # Usa una imagen base con PHP y Composer
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Instala extensiones necesarias
 RUN apt-get update && apt-get install -y \
